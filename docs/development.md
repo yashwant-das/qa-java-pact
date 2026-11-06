@@ -158,4 +158,12 @@ Topics: `test-automation`, `java`, `pact`, `wiremock`, `pactflow`, `junit`, `api
 
 The owner explicitly requested repository creation, metadata updates and pushing on 2026-11-07. This authorises GitHub publication; it does not authorise publishing Pact contracts or verification results to a PactFlow account.
 
-The `Java contracts and quality` workflow check must pass before enabling it as a required check. Hosted execution and enforcement evidence are recorded after publication. Java CodeQL scanning is configured for pushes, pull requests and a weekly schedule; it has only the permissions needed to upload security results and is separate from PMD. Owner for pending hosted/settings evidence: project maintainer. Review trigger: first publication and any CI/security configuration change.
+### Hosted verification and repository policy
+
+The initial published revision `a611603732ddbd9a2e12522980cb41736d1036f7` passed both [CI](https://github.com/yashwant-das/qa-java-pact/actions/runs/42280516768) and [Java CodeQL scanning](https://github.com/yashwant-das/qa-java-pact/actions/runs/42280516480) on 2026-11-07. CI exercised the actual client/provider contracts, robustness cases, negative-price exercise, configuration guards, all pre-commit hooks and Compose syntax. Hosted CI does not start a Docker container; Docker runtime smoke evidence is local.
+
+Java CodeQL scanning runs on pushes, pull requests and a weekly schedule; it has only the permissions needed to upload security results and is separate from PMD. Secret scanning and secret push protection are enabled for the public repository.
+
+Branch policy: require both `Java contracts and quality` and `Java code scanning` from GitHub Actions on `main`, require an up-to-date branch, enforce checks for administrators, and reject force pushes and branch deletion. The live protection configuration is verified during publication. Changes should go through a branch and pull request so checks can run before updating `main`.
+
+The account's local repository inventory is refreshed after publication. Live PactFlow publishing and Mockoon desktop import remain outside the verified scope. Owner: project maintainer. Review trigger: changes to CI, security settings, supported runtimes or cloud integration.
