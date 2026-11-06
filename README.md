@@ -121,10 +121,15 @@ curl 'http://localhost:8080/products?category=skincare&page=1'
 docker compose down
 ```
 
-Run the real sample API in a separate terminal:
+Prepare the local Maven artifacts after cloning, or after changing the parent/consumer module. This command finishes and exits; the provider needs these artifacts when run on its own:
 
 ```bash
 ./mvnw -pl consumer -am install -DskipTests
+```
+
+Then start the real sample API and leave this terminal running:
+
+```bash
 ./mvnw -pl provider compile exec:java
 ```
 

@@ -137,7 +137,7 @@ To start only the provider module, first install the parent and consumer with `.
 
 PMD's hard-coded-IP warning is suppressed only on the sample server constructor: binding specifically to IPv4 loopback is deliberate and matches provider verification. Owner: project maintainer. Review when supporting external hosts or IPv6. Pact-JVM currently emits a JUnit `CloseableResource` deprecation warning; it does not skip or fail tests. Review when updating Pact/JUnit.
 
-Local verification covers Java, generated contracts, the intentional incompatibility and fixture mappings. Live PactFlow publishing/release tracking needs the owner's account and has not been exercised. Mockoon desktop import is an optional manual exercise. Docker Compose and standalone-JAR smoke checks passed: distinct first/second products, empty final page and the configured mappings. All pre-commit hooks passed. The temporary container was stopped after verification.
+Local verification covers Java, generated contracts, the intentional incompatibility and fixture mappings. Live PactFlow publishing/release tracking needs the owner's account and has not been exercised. Mockoon 9.10.0 desktop import was verified through Browse using the local OpenAPI file: one route, three saved success examples, a generated schema response and a 503 response with an empty body. Port and response-rule configuration remain a manual exercise; see the learning path. Docker Compose and standalone-JAR smoke checks passed: distinct first/second products, empty final page and the configured mappings. All pre-commit hooks passed. The temporary container was stopped after verification.
 
 ### Adoption audit
 
@@ -174,4 +174,4 @@ Java CodeQL scanning runs on pushes, pull requests and a weekly schedule; it has
 
 Branch policy: require both `Java contracts and quality` and `Java code scanning` from GitHub Actions on `main`, require an up-to-date branch, enforce checks for administrators, and reject force pushes and branch deletion. The live protection configuration is verified during publication. Changes should go through a branch and pull request so checks can run before updating `main`.
 
-The account's local repository inventory is refreshed after publication. Live PactFlow publishing and Mockoon desktop import remain outside the verified scope. Owner: project maintainer. Review trigger: changes to CI, security settings, supported runtimes or cloud integration.
+The account's local repository inventory is refreshed after publication. Live PactFlow publishing remains outside the verified scope. Mockoon local-file import was subsequently verified on 2026-11-07; its scenario rules and runtime exercise remain manual. Owner: project maintainer. Review trigger: changes to CI, security settings, supported runtimes or cloud integration.
