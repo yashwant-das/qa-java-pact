@@ -10,6 +10,8 @@ Find the consumer/provider names, provider state, query parameters and response 
 
 The first-page interaction needs product identity, name, numeric price and currency. The exhausted-page interaction needs an empty products array and `hasNext=false`. Provider verification starts the real sample API and checks both requests independently.
 
+For manual requests, import the collection and follow the [API and Postman guide](api.md). Its folders keep real provider behaviour separate from WireMock fault scenarios.
+
 ## 2. Explore file-based mocks
 
 Start `docker compose up -d`. Request successive pages:

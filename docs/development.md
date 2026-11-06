@@ -112,6 +112,14 @@ Add consumer contracts only for behaviour the actual client relies on. Invoke `C
 
 Use robustness tests for timeouts, HTTP errors and malformed input. Add manual WireMock mappings under `wiremock/mappings/` and JSON bodies under `wiremock/__files/`; the automated client tests load those same files. There are no runtime Java route registrations to maintain.
 
+## API and Postman artifacts
+
+The [API guide](api.md) documents the running provider and WireMock endpoints, Postman import and manual/runner usage. The standalone collection at `postman/catalog.postman_collection.json` requires no environment file; its two collection variables select the real provider and mock URLs.
+
+The collection was validated against Postman's official v2.1 schema, then executed with Newman 6.2.3 on Node 24 against a fresh real provider and standalone WireMock. All 18 requests and 72 assertions passed. Saved examples and scenario-specific assertions cover success, validation, method/route errors and deliberate mock faults. The temporary validation servers were stopped after the run.
+
+The default CI checks JSON syntax through pre-commit; it does not run Newman. Re-run the collection using [the documented command](api.md#run-the-collection) after changing request examples or provider/mock behaviour. Desktop import clicks and account upload are separate from this local execution evidence.
+
 ## Troubleshooting
 
 - Missing generated Pact: run from the root so Maven builds the consumer first. A provider-only invocation cannot generate a missing consumer contract.

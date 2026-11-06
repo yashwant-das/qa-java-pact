@@ -2,8 +2,8 @@
 
 Tests a fictional ecommerce API with Pact-JVM, verifies the real provider, and demonstrates PactFlow release compatibility alongside WireMock fault scenarios.
 
-[![CI](https://github.com/yashwant-das/qa-java-pact/actions/workflows/ci.yml/badge.svg)](https://github.com/yashwant-das/qa-java-pact/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/yashwant-das/qa-java-pact/actions/workflows/codeql.yml/badge.svg)](https://github.com/yashwant-das/qa-java-pact/actions/workflows/codeql.yml)
+[![CI](https://github.com/yashwant-das/qa-java-pact/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/yashwant-das/qa-java-pact/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/yashwant-das/qa-java-pact/actions/workflows/codeql.yml/badge.svg?branch=main&event=push)](https://github.com/yashwant-das/qa-java-pact/actions/workflows/codeql.yml)
 ![Java 21](https://img.shields.io/badge/Java-21-ED8B00)
 ![Pact-JVM](https://img.shields.io/badge/contracts-Pact--JVM-00A86B)
 ![WireMock](https://img.shields.io/badge/mocks-WireMock-4B32C3)
@@ -41,14 +41,50 @@ flowchart LR
 ### Project structure
 
 ```text
-consumer/       Real HTTP client, consumer Pact tests and WireMock robustness tests
-provider/       Independent catalog API, functional tests and local/broker verification
-wiremock/       File-based mappings and response bodies
-mockoon/        Optional OpenAPI import exercise
-scripts/        Guarded PactFlow commands and negative verification exercise
-.github/        Credential-free CI and dependency updates
-docs/           Architecture, development and learning guides
+qa-java-pact/
+├── pom.xml                              # Parent build, modules and pinned dependencies
+├── mvnw / mvnw.cmd                      # Maven Wrapper; checksum pinned in .mvn/
+├── consumer/
+│   ├── pom.xml
+│   └── src/
+│       ├── main/java/com/qaframework/pact/consumer/
+│       │   └── CatalogClient.java       # Actual HTTP client and response parsing
+│       └── test/java/com/qaframework/pact/consumer/
+│           ├── CatalogClientPactTest.java        # Generates consumer contracts
+│           └── CatalogClientRobustnessTest.java  # Fault handling via WireMock
+├── provider/
+│   ├── pom.xml
+│   └── src/
+│       ├── main/java/com/qaframework/pact/provider/
+│       │   └── CatalogServer.java       # Independent fictional catalog API
+│       └── test/java/com/qaframework/pact/provider/
+│           ├── CatalogServerTest.java   # API functional behaviour
+│           ├── LocalVerificationTest.java   # Verifies locally generated contracts
+│           └── BrokerVerificationTest.java  # Opt-in PactFlow verification
+├── wiremock/
+│   ├── mappings/                        # Request matching, delays and HTTP errors
+│   └── __files/catalog/                 # Pagination and incompatible-price fixtures
+├── postman/
+│   └── catalog.postman_collection.json   # Importable requests, examples and assertions
+├── mockoon/
+│   └── catalog.openapi.json             # Optional desktop import exercise
+├── scripts/
+│   ├── pactflow.sh                      # Explicit publishing and release operations
+│   ├── test-pactflow-guards.sh           # Rejects missing cloud configuration
+│   └── check-breaking-change.sh         # Confirms an incompatible provider fails
+├── docs/
+│   ├── architecture.md                  # Boundaries and contract lifecycle
+│   ├── development.md                   # Setup, commands and standards audit
+│   ├── learning-path.md                 # Guided exercises
+│   └── superpowers/                     # Historical design and verification records
+├── .github/
+│   ├── workflows/                       # CI and Java CodeQL scanning
+│   └── dependabot.yml                   # Weekly dependency updates
+├── compose.yaml                         # Standalone WireMock on port 8080
+└── .pre-commit-config.yaml               # Local quality hooks
 ```
+
+Generated contracts live in `consumer/target/pacts/`; test and analysis reports live under each module's `target/`. These build outputs are ignored by Git.
 
 ### Tech stack
 
@@ -94,6 +130,12 @@ Run the real sample API in a separate terminal:
 
 It listens on `http://127.0.0.1:8081`. Stop it with Ctrl+C. See the [learning path](docs/learning-path.md) for pagination, errors, the breaking-change exercise, Mockoon and PactFlow.
 
+### Explore with Postman
+
+Import [the Postman collection](postman/catalog.postman_collection.json), then open **Provider API → 01 · Products page 1** and choose **Send**. Collection variables already target the real provider on port 8081 and WireMock on port 8080. Start the server for the folder you want to explore, or start both to run all 18 requests.
+
+The [API and Postman guide](docs/api.md) covers server startup, query parameters, response fields, error cases, mock-only scenarios and the Collection Runner. Working with an AI agent? Use the [copyable CLI upload prompt](docs/api.md#work-with-an-ai-agent) to have it test the collection and add it to your Postman workspace.
+
 ## Verification
 
 | Command | What it verifies |
@@ -110,6 +152,7 @@ PactFlow live operations and Mockoon desktop behaviour require separate setup; a
 
 ## Documentation
 
+- [API and Postman guide](docs/api.md): endpoint reference, import steps, examples and collection runs.
 - [Architecture](docs/architecture.md): responsibilities, lifecycle and test boundaries.
 - [Development](docs/development.md): setup, configuration, cloud commands, checks and limitations.
 - [Learning path](docs/learning-path.md): step-by-step exercises and expected results.

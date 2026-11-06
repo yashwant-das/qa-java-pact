@@ -1,0 +1,1738 @@
+{
+  "info": {
+    "name": "API Contract Testing · Local Catalog",
+    "description": "Explore the fictional catalog API and its WireMock scenarios. Start the provider on port 8081 and WireMock on port 8080. Each folder uses its own collection URL variable, so no environment is required. Run only the folder for the server you started, or start both and run the full collection. No credentials or request body are required. See docs/api.md in the repository for setup and expected responses. Saved examples are included for offline inspection.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "noauth"
+  },
+  "variable": [
+    {
+      "key": "providerBaseUrl",
+      "value": "http://127.0.0.1:8081",
+      "type": "string",
+      "description": "Actual sample CatalogServer origin; edit this value if CATALOG_PORT changes. No trailing slash."
+    },
+    {
+      "key": "mockBaseUrl",
+      "value": "http://127.0.0.1:8080",
+      "type": "string",
+      "description": "WireMock origin from Docker Compose. No trailing slash."
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Response is JSON\", function () {",
+          "  pm.expect(pm.response.json()).to.be.an(\"object\");",
+          "});",
+          "pm.test(\"Content-Type is application/json\", function () {",
+          "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Provider API",
+      "description": "Start CatalogServer on port 8081. Requests exercise real endpoint behaviour, pagination and validation. No mock runtime is involved.",
+      "item": [
+        {
+          "name": "01 · Products page 1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=1",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(1);",
+                  "  pm.expect(body.hasNext).to.eql(true);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.have.lengthOf(1);",
+                  "  pm.expect(body.products[0].id).to.eql(\"sku-123\");",
+                  "  pm.expect(body.products[0].name).to.eql(\"Daily moisturiser\");",
+                  "  pm.expect(body.products[0].price).to.be.a(\"number\");",
+                  "  pm.expect(body.products[0].price).to.eql(19990.0);",
+                  "  pm.expect(body.products[0].currency).to.eql(\"CLP\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=1",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"hasNext\": true,\n  \"products\": [\n    {\n      \"id\": \"sku-123\",\n      \"name\": \"Daily moisturiser\",\n      \"price\": 19990.0,\n      \"currency\": \"CLP\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 · Products page 2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=2",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(2);",
+                  "  pm.expect(body.hasNext).to.eql(false);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.have.lengthOf(1);",
+                  "  pm.expect(body.products[0].id).to.eql(\"sku-456\");",
+                  "  pm.expect(body.products[0].name).to.eql(\"Mineral sunscreen\");",
+                  "  pm.expect(body.products[0].price).to.be.a(\"number\");",
+                  "  pm.expect(body.products[0].price).to.eql(24990.0);",
+                  "  pm.expect(body.products[0].currency).to.eql(\"CLP\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=2",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    }
+                  ]
+                },
+                "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 2,\n  \"hasNext\": false,\n  \"products\": [\n    {\n      \"id\": \"sku-456\",\n      \"name\": \"Mineral sunscreen\",\n      \"price\": 24990.0,\n      \"currency\": \"CLP\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 · Products page 3",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=3",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(3);",
+                  "  pm.expect(body.hasNext).to.eql(false);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.be.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=3",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "3"
+                    }
+                  ]
+                },
+                "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 3,\n  \"hasNext\": false,\n  \"products\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "04 · Unknown category returns an empty page",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=unknown&page=1",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "unknown"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "The real provider returns an empty result for categories other than skincare. WireMock has no equivalent general category rule."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(1);",
+                  "  pm.expect(body.hasNext).to.eql(false);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.be.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=unknown&page=1",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "unknown"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "The real provider returns an empty result for categories other than skincare. WireMock has no equivalent general category rule."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"hasNext\": false,\n  \"products\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "05 · Reject page zero",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=0",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                }
+              ]
+            },
+            "description": "Pages start at 1."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Provide category and a positive integer page\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 400 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=0",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    }
+                  ]
+                },
+                "description": "Pages start at 1."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Provide category and a positive integer page\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "06 · Reject a nonnumeric page",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=abc",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "abc"
+                }
+              ]
+            },
+            "description": "Page must be a positive 32-bit integer."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Provide category and a positive integer page\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 400 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=abc",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "abc"
+                    }
+                  ]
+                },
+                "description": "Page must be a positive 32-bit integer."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Provide category and a positive integer page\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "07 · Reject a missing category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?page=1",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Both category and page are required; neither has a server default."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Provide category and a positive integer page\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 400 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?page=1",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Both category and page are required; neither has a server default."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Provide category and a positive integer page\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "08 · Reject a missing page",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                }
+              ]
+            },
+            "description": "Both category and page are required."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Provide category and a positive integer page\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 400 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    }
+                  ]
+                },
+                "description": "Both category and page are required."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Provide category and a positive integer page\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "09 · Reject duplicate page parameters",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=1&page=2",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Duplicate query keys are rejected, even when the individual values are otherwise valid."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Provide category and a positive integer page\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 400 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=1&page=2",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    }
+                  ]
+                },
+                "description": "Duplicate query keys are rejected, even when the individual values are otherwise valid."
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Provide category and a positive integer page\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "10 · Reject POST on products",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/products?category=skincare&page=1",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "The sample API is read-only. This request demonstrates method rejection; it does not create products."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 405\", function () { pm.response.to.have.status(405); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Method not allowed\");",
+                  "  pm.expect(pm.response.headers.get(\"Allow\")).to.eql(\"GET\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 405 response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/products?category=skincare&page=1",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "The sample API is read-only. This request demonstrates method rejection; it does not create products."
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Allow",
+                  "value": "GET"
+                }
+              ],
+              "body": "{\n  \"error\": \"Method not allowed\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "11 · Unknown route",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{providerBaseUrl}}/unknown",
+              "host": [
+                "{{providerBaseUrl}}"
+              ],
+              "path": [
+                "unknown"
+              ]
+            },
+            "description": "The provider has no product-detail, health, authentication, cart or order endpoints."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Route not found\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 404 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{providerBaseUrl}}/unknown",
+                  "host": [
+                    "{{providerBaseUrl}}"
+                  ],
+                  "path": [
+                    "unknown"
+                  ]
+                },
+                "description": "The provider has no product-detail, health, authentication, cart or order endpoints."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Route not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "WireMock scenarios",
+      "description": "Start Docker Compose on port 8080. These are explicitly configured fixtures, including intentional errors and an incompatible schema; they do not prove real provider compatibility.",
+      "item": [
+        {
+          "name": "01 · Products page 1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=skincare&page=1",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(1);",
+                  "  pm.expect(body.hasNext).to.eql(true);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.have.lengthOf(1);",
+                  "  pm.expect(body.products[0].id).to.eql(\"sku-123\");",
+                  "  pm.expect(body.products[0].name).to.eql(\"Daily moisturiser\");",
+                  "  pm.expect(body.products[0].price).to.be.a(\"number\");",
+                  "  pm.expect(body.products[0].price).to.eql(19990.0);",
+                  "  pm.expect(body.products[0].currency).to.eql(\"CLP\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=skincare&page=1",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"hasNext\": true,\n  \"products\": [\n    {\n      \"id\": \"sku-123\",\n      \"name\": \"Daily moisturiser\",\n      \"price\": 19990.0,\n      \"currency\": \"CLP\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 · Products page 2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=skincare&page=2",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(2);",
+                  "  pm.expect(body.hasNext).to.eql(false);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.have.lengthOf(1);",
+                  "  pm.expect(body.products[0].id).to.eql(\"sku-456\");",
+                  "  pm.expect(body.products[0].name).to.eql(\"Mineral sunscreen\");",
+                  "  pm.expect(body.products[0].price).to.be.a(\"number\");",
+                  "  pm.expect(body.products[0].price).to.eql(24990.0);",
+                  "  pm.expect(body.products[0].currency).to.eql(\"CLP\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=skincare&page=2",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "2"
+                    }
+                  ]
+                },
+                "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 2,\n  \"hasNext\": false,\n  \"products\": [\n    {\n      \"id\": \"sku-456\",\n      \"name\": \"Mineral sunscreen\",\n      \"price\": 24990.0,\n      \"currency\": \"CLP\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 · Products page 3",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=skincare&page=3",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "skincare"
+                },
+                {
+                  "key": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(3);",
+                  "  pm.expect(body.hasNext).to.eql(false);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.be.empty;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=skincare&page=3",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "skincare"
+                    },
+                    {
+                      "key": "page",
+                      "value": "3"
+                    }
+                  ]
+                },
+                "description": "One product per page. Page 3 is empty and marks the end of the sample catalog."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 3,\n  \"hasNext\": false,\n  \"products\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "04 · Service unavailable",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=unavailable&page=1",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "unavailable"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "WireMock-only failure scenario. HTTP 503 is the expected response, so its assertion passes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 503\", function () { pm.response.to.have.status(503); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"Catalog temporarily unavailable\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 503 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=unavailable&page=1",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "unavailable"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "WireMock-only failure scenario. HTTP 503 is the expected response, so its assertion passes."
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Catalog temporarily unavailable\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "05 · Slow response",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=slow&page=1",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "slow"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "WireMock-only scenario with a configured 750 ms delay. Set the Postman request timeout above this (for example 5000 ms). Inspect the response time; assertions do not depend on machine-specific latency."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.page).to.eql(1);",
+                  "  pm.expect(body.hasNext).to.eql(true);",
+                  "  pm.expect(body.products).to.be.an(\"array\");",
+                  "  pm.expect(body.products).to.have.lengthOf(1);",
+                  "  pm.expect(body.products[0].id).to.eql(\"sku-123\");",
+                  "  pm.expect(body.products[0].name).to.eql(\"Daily moisturiser\");",
+                  "  pm.expect(body.products[0].price).to.be.a(\"number\");",
+                  "  pm.expect(body.products[0].price).to.eql(19990.0);",
+                  "  pm.expect(body.products[0].currency).to.eql(\"CLP\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=slow&page=1",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "slow"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "WireMock-only scenario with a configured 750 ms delay. Set the Postman request timeout above this (for example 5000 ms). Inspect the response time; assertions do not depend on machine-specific latency."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"hasNext\": true,\n  \"products\": [\n    {\n      \"id\": \"sku-123\",\n      \"name\": \"Daily moisturiser\",\n      \"price\": 19990.0,\n      \"currency\": \"CLP\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "06 · Incompatible price shape",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=incompatible&page=1",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "incompatible"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "WireMock deliberately returns an object-shaped price. This request asserts that the fault fixture is present; a passing assertion does not mean the response satisfies the consumer contract."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.products[0].price).to.be.an(\"object\");",
+                  "  pm.expect(body.products[0].price.amount).to.eql(19990);",
+                  "  pm.expect(body.products[0].price.currency).to.eql(\"CLP\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 200 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=incompatible&page=1",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "incompatible"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "WireMock deliberately returns an object-shaped price. This request asserts that the fault fixture is present; a passing assertion does not mean the response satisfies the consumer contract."
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"page\": 1,\n  \"hasNext\": false,\n  \"products\": [\n    {\n      \"id\": \"sku-123\",\n      \"name\": \"Daily moisturiser\",\n      \"price\": {\n        \"amount\": 19990,\n        \"currency\": \"CLP\"\n      },\n      \"currency\": \"CLP\"\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "07 · Unmatched mock request",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{mockBaseUrl}}/products?category=unknown&page=1",
+              "host": [
+                "{{mockBaseUrl}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "unknown"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Unlike the real provider, WireMock only serves explicit mappings. Unknown categories or unmapped pages receive the mock fallback."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Expected HTTP 404\", function () { pm.response.to.have.status(404); });",
+                  "pm.test(\"Response matches this scenario\", function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.error).to.eql(\"No matching mock scenario\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "Expected 404 response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{mockBaseUrl}}/products?category=unknown&page=1",
+                  "host": [
+                    "{{mockBaseUrl}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "category",
+                      "value": "unknown"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    }
+                  ]
+                },
+                "description": "Unlike the real provider, WireMock only serves explicit mappings. Unknown categories or unmapped pages receive the mock fallback."
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"No matching mock scenario\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

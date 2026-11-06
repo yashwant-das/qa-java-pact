@@ -20,4 +20,4 @@ The namespace is `com.qaframework.pact`; the repository name is `qa-java-pact`.
 
 ## Documentation
 
-README is the entry point. `docs/development.md` owns commands and configuration; `docs/architecture.md` owns boundaries and trade-offs; `docs/learning-path.md` owns exercises. `docs/superpowers/` contains historical planning records.
+README is the entry point. `docs/development.md` owns commands and configuration; `docs/architecture.md` owns boundaries and trade-offs; `docs/learning-path.md` owns exercises; `docs/api.md` owns the API reference and Postman workflow. The importable collection is `postman/catalog.postman_collection.json`; keep examples and assertions aligned with the real provider and mock fixtures. `docs/superpowers/` contains historical planning records.
