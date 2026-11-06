@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.qaframework</groupId><artifactId>qa-java-pact</artifactId><version>1.0.0-SNAPSHOT</version><packaging>pom</packaging>
+  <name>qa-java-pact</name>
+  <description>Tests API compatibility with Pact-JVM, WireMock and PactFlow</description>
+  <licenses><license><name>MIT License</name><url>https://opensource.org/licenses/MIT</url></license></licenses>
+  <modules><module>consumer</module><module>provider</module></modules>
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <pact.version>4.7.7</pact.version><junit.version>5.14.4</junit.version><jackson.version>2.22.4</jackson.version><wiremock.version>3.13.2</wiremock.version>
+    <pact.verifier.publishResults>false</pact.verifier.publishResults><pact.provider.version>local</pact.provider.version><pact.provider.branch>local</pact.provider.branch>
+    <catalog.priceShape>number</catalog.priceShape>
+  </properties>
+  <dependencyManagement><dependencies>
+    <dependency><groupId>org.junit</groupId><artifactId>junit-bom</artifactId><version>${junit.version}</version><type>pom</type><scope>import</scope></dependency>
+    <dependency><groupId>com.fasterxml.jackson</groupId><artifactId>jackson-bom</artifactId><version>${jackson.version}</version><type>pom</type><scope>import</scope></dependency>
+  </dependencies></dependencyManagement>
+  <dependencies><dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency></dependencies>
+  <build><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.16.0</version></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.6.1</version><configuration>
+      <useSystemClassLoader>false</useSystemClassLoader><failIfNoTests>true</failIfNoTests>
+      <systemPropertyVariables>
+        <pact.rootDir>${project.build.directory}/pacts</pact.rootDir><pact.writer.overwrite>true</pact.writer.overwrite><pact_do_not_track>true</pact_do_not_track>
+        <pact.verifier.publishResults>${pact.verifier.publishResults}</pact.verifier.publishResults><pact.provider.version>${pact.provider.version}</pact.provider.version><pact.provider.branch>${pact.provider.branch}</pact.provider.branch>
+        <catalog.priceShape>${catalog.priceShape}</catalog.priceShape>
+      </systemPropertyVariables>
+    </configuration></plugin>
+    <plugin><groupId>com.diffplug.spotless</groupId><artifactId>spotless-maven-plugin</artifactId><version>3.11.0</version><configuration>
+      <java><googleJavaFormat><version>1.28.0</version></googleJavaFormat></java>
+    </configuration><executions><execution><phase>verify</phase><goals><goal>check</goal></goals></execution></executions></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-pmd-plugin</artifactId><version>3.28.0</version><configuration><targetJdk>21</targetJdk><linkXRef>false</linkXRef><printFailingErrors>true</printFailingErrors></configuration><executions><execution><phase>verify</phase><goals><goal>check</goal></goals></execution></executions></plugin>
+  </plugins></build>
+</project>

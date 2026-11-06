@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/products",
+    "queryParameters": {
+      "category": {
+        "equalTo": "slow"
+      },
+      "page": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "fixedDelayMilliseconds": 750,
+    "bodyFileName": "catalog/page-1.json",
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    }
+  }
+}

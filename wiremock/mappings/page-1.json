@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/products",
+    "queryParameters": {
+      "category": {
+        "equalTo": "skincare"
+      },
+      "page": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    },
+    "bodyFileName": "catalog/page-1.json"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/products",
+    "queryParameters": {
+      "category": {
+        "equalTo": "unavailable"
+      },
+      "page": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 503,
+    "jsonBody": {
+      "error": "Catalog temporarily unavailable"
+    },
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion><parent><groupId>com.qaframework</groupId><artifactId>qa-java-pact</artifactId><version>1.0.0-SNAPSHOT</version></parent><artifactId>provider</artifactId>
+  <dependencies>
+    <dependency><groupId>com.fasterxml.jackson.core</groupId><artifactId>jackson-databind</artifactId></dependency>
+    <dependency><groupId>au.com.dius.pact.provider</groupId><artifactId>junit5</artifactId><version>${pact.version}</version><scope>test</scope></dependency>
+    <dependency><groupId>com.qaframework</groupId><artifactId>consumer</artifactId><version>${project.version}</version><scope>test</scope></dependency>
+  </dependencies>
+  <build><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><excludes><exclude>**/BrokerVerificationTest.java</exclude></excludes></configuration></plugin>
+    <plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.6.4</version><configuration><mainClass>com.qaframework.pact.provider.CatalogServer</mainClass></configuration></plugin>
+  </plugins></build>
+  <profiles><profile><id>broker</id><build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration combine.self="override">
+    <includes><include>**/BrokerVerificationTest.java</include></includes><useSystemClassLoader>false</useSystemClassLoader><failIfNoTests>true</failIfNoTests>
+    <systemPropertyVariables><pact.verifier.publishResults>${pact.verifier.publishResults}</pact.verifier.publishResults><pact.provider.version>${pact.provider.version}</pact.provider.version><pact.provider.branch>${pact.provider.branch}</pact.provider.branch><catalog.priceShape>${catalog.priceShape}</catalog.priceShape></systemPropertyVariables>
+  </configuration></plugin></plugins></build></profile></profiles>
+</project>

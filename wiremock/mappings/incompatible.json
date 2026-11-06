@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/products",
+    "queryParameters": {
+      "category": {
+        "equalTo": "incompatible"
+      },
+      "page": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "catalog/incompatible.json",
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store"
+    }
+  }
+}

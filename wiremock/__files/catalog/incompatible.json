@@ -1,0 +1,15 @@
+{
+  "page": 1,
+  "hasNext": false,
+  "products": [
+    {
+      "id": "sku-123",
+      "name": "Daily moisturiser",
+      "price": {
+        "amount": 19990,
+        "currency": "CLP"
+      },
+      "currency": "CLP"
+    }
+  ]
+}

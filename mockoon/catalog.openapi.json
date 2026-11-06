@@ -1,0 +1,142 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Fictional catalog mock exercise",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8082"
+    }
+  ],
+  "paths": {
+    "/products": {
+      "get": {
+        "summary": "Search the sample catalog",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "skincare"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A product page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "page",
+                    "hasNext",
+                    "products"
+                  ],
+                  "properties": {
+                    "page": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "hasNext": {
+                      "type": "boolean"
+                    },
+                    "products": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "price",
+                          "currency"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "price": {
+                            "type": "number"
+                          },
+                          "currency": {
+                            "type": "string",
+                            "enum": [
+                              "CLP"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "page1": {
+                    "value": {
+                      "page": 1,
+                      "hasNext": true,
+                      "products": [
+                        {
+                          "id": "sku-123",
+                          "name": "Daily moisturiser",
+                          "price": 19990.0,
+                          "currency": "CLP"
+                        }
+                      ]
+                    }
+                  },
+                  "page2": {
+                    "value": {
+                      "page": 2,
+                      "hasNext": false,
+                      "products": [
+                        {
+                          "id": "sku-456",
+                          "name": "Mineral sunscreen",
+                          "price": 24990.0,
+                          "currency": "CLP"
+                        }
+                      ]
+                    }
+                  },
+                  "page3": {
+                    "value": {
+                      "page": 3,
+                      "hasNext": false,
+                      "products": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Catalog temporarily unavailable"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
