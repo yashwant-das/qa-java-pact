@@ -64,6 +64,8 @@ qa-java-pact/
 ├── wiremock/
 │   ├── mappings/                        # Request matching, delays and HTTP errors
 │   └── __files/catalog/                 # Pagination and incompatible-price fixtures
+├── postman/
+│   └── catalog.postman_collection.json   # Importable requests, examples and assertions
 ├── mockoon/
 │   └── catalog.openapi.json             # Optional desktop import exercise
 ├── scripts/
@@ -128,6 +130,12 @@ Run the real sample API in a separate terminal:
 
 It listens on `http://127.0.0.1:8081`. Stop it with Ctrl+C. See the [learning path](docs/learning-path.md) for pagination, errors, the breaking-change exercise, Mockoon and PactFlow.
 
+### Explore with Postman
+
+Import [the Postman collection](postman/catalog.postman_collection.json), then open **Provider API → 01 · Products page 1** and choose **Send**. Collection variables already target the real provider on port 8081 and WireMock on port 8080. Start the server for the folder you want to explore, or start both to run all 18 requests.
+
+The [API and Postman guide](docs/api.md) covers server startup, query parameters, response fields, error cases, mock-only scenarios and the Collection Runner.
+
 ## Verification
 
 | Command | What it verifies |
@@ -144,6 +152,7 @@ PactFlow live operations and Mockoon desktop behaviour require separate setup; a
 
 ## Documentation
 
+- [API and Postman guide](docs/api.md): endpoint reference, import steps, examples and collection runs.
 - [Architecture](docs/architecture.md): responsibilities, lifecycle and test boundaries.
 - [Development](docs/development.md): setup, configuration, cloud commands, checks and limitations.
 - [Learning path](docs/learning-path.md): step-by-step exercises and expected results.
