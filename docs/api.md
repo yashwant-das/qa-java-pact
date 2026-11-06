@@ -178,6 +178,27 @@ For different local ports, pass `--env-var providerBaseUrl=http://127.0.0.1:9081
 
 Postman assertions complement the Java tests. They exercise sample requests and fixtures; they do not publish Pact contracts or verify a real API against a Pact contract. The standard Maven CI job checks the collection's JSON syntax through pre-commit; running the collection requires the servers described above.
 
+## Work with an AI agent
+
+If you use a coding agent, you can ask it to validate the collection and add it to your Postman workspace using Postman CLI. With the CLI installed, sign in from your terminal first:
+
+```bash
+postman login
+```
+
+Then give the agent a prompt such as:
+
+```text
+Read docs/api.md and test postman/catalog.postman_collection.json against the
+local provider and WireMock. Use Postman CLI to add the tested collection to
+my existing "<workspace name>" workspace. Check for an existing copy first and
+preserve other collections. Return the Postman collection link and test results.
+```
+
+Replace `<workspace name>` with your destination workspace. The agent can use the signed-in CLI session to find the workspace, upload the collection and verify its requests, examples, URL variables and assertion scripts. Account upload is an explicit action; a local collection test does not add anything to your Postman account.
+
+After upload, open the returned link in Postman and use the **Provider API** or **WireMock scenarios** folder. The local servers must still be running when you send requests from Postman.
+
 ## Troubleshooting
 
 - **Connection refused:** start the relevant server and confirm the port. A passing Maven test run starts temporary servers and then stops them; it does not leave either manual server running.

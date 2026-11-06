@@ -134,7 +134,7 @@ It listens on `http://127.0.0.1:8081`. Stop it with Ctrl+C. See the [learning pa
 
 Import [the Postman collection](postman/catalog.postman_collection.json), then open **Provider API → 01 · Products page 1** and choose **Send**. Collection variables already target the real provider on port 8081 and WireMock on port 8080. Start the server for the folder you want to explore, or start both to run all 18 requests.
 
-The [API and Postman guide](docs/api.md) covers server startup, query parameters, response fields, error cases, mock-only scenarios and the Collection Runner.
+The [API and Postman guide](docs/api.md) covers server startup, query parameters, response fields, error cases, mock-only scenarios and the Collection Runner. Working with an AI agent? Use the [copyable CLI upload prompt](docs/api.md#work-with-an-ai-agent) to have it test the collection and add it to your Postman workspace.
 
 ## Verification
 
