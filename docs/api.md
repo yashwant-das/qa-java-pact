@@ -15,12 +15,19 @@ Both servers are local and require no authentication. Requests use their folder'
 
 From the repository root, with JDK 21 selected:
 
+First prepare the parent and consumer artifacts needed by the provider module. Run this after cloning, and again when those modules change; it completes and exits:
+
 ```bash
 ./mvnw -pl consumer -am install -DskipTests
+```
+
+Then start the API and leave its terminal open:
+
+```bash
 ./mvnw -pl provider compile exec:java
 ```
 
-The first command installs the parent and consumer artifacts needed by the provider module. The second keeps the API running in that terminal. Wait for the `Catalog API: http://127.0.0.1:8081/products?category=skincare&page=1` message, then use a separate terminal or Postman. Stop with Ctrl+C.
+The provider has a test-scope dependency on the consumer to establish contract-generation order in the Maven reactor. A provider-only invocation still resolves that dependency, so the preparation step is required when its artifact is not already installed. Wait for the `Catalog API: http://127.0.0.1:8081/products?category=skincare&page=1` message, then use a separate terminal or Postman. Stop with Ctrl+C.
 
 To use another port:
 
