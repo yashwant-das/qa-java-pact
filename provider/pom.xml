@@ -7,7 +7,7 @@
   </dependencies>
   <build><plugins>
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><excludes><exclude>**/BrokerVerificationTest.java</exclude></excludes></configuration></plugin>
-    <plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.6.4</version><configuration><mainClass>com.qaframework.pact.provider.CatalogServer</mainClass></configuration></plugin>
+    <plugin><groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.7.0</version><configuration><mainClass>com.qaframework.pact.provider.CatalogServer</mainClass></configuration></plugin>
   </plugins></build>
   <profiles><profile><id>broker</id><build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration combine.self="override">
     <includes><include>**/BrokerVerificationTest.java</include></includes><useSystemClassLoader>false</useSystemClassLoader><failIfNoTests>true</failIfNoTests>
