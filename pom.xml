@@ -7,7 +7,7 @@
   <modules><module>consumer</module><module>provider</module></modules>
   <properties>
     <maven.compiler.release>21</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <pact.version>4.7.7</pact.version><junit.version>5.14.4</junit.version><jackson.version>2.22.4</jackson.version><wiremock.version>3.13.2</wiremock.version>
+    <pact.version>4.7.7</pact.version><junit.version>5.14.4</junit.version><jackson.version>2.23.0</jackson.version><wiremock.version>3.13.2</wiremock.version>
     <pact.verifier.publishResults>false</pact.verifier.publishResults><pact.provider.version>local</pact.provider.version><pact.provider.branch>local</pact.provider.branch>
     <catalog.priceShape>number</catalog.priceShape>
   </properties>
@@ -26,7 +26,7 @@
         <catalog.priceShape>${catalog.priceShape}</catalog.priceShape>
       </systemPropertyVariables>
     </configuration></plugin>
-    <plugin><groupId>com.diffplug.spotless</groupId><artifactId>spotless-maven-plugin</artifactId><version>3.11.0</version><configuration>
+    <plugin><groupId>com.diffplug.spotless</groupId><artifactId>spotless-maven-plugin</artifactId><version>3.12.0</version><configuration>
       <java><googleJavaFormat><version>1.28.0</version></googleJavaFormat></java>
     </configuration><executions><execution><phase>verify</phase><goals><goal>check</goal></goals></execution></executions></plugin>
     <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-pmd-plugin</artifactId><version>3.28.0</version><configuration><targetJdk>21</targetJdk><linkXRef>false</linkXRef><printFailingErrors>true</printFailingErrors></configuration><executions><execution><phase>verify</phase><goals><goal>check</goal></goals></execution></executions></plugin>
